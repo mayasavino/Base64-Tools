@@ -1,4 +1,5 @@
 import base64
+import binascii
 
 
 def base64_encode(initial_string):
@@ -8,9 +9,24 @@ def base64_encode(initial_string):
     return encoded_string
 
 def base64_decode(encoded_string):
-    decoded_bytes = base64.b64decode(encoded_string) # convert string to bytes
-    decoded_string = decoded_bytes.decode('utf-8') # decode bytes to plain text
-    return decoded_string
+    try:
+        decoded_bytes = base64.b64decode(encoded_string) # convert string to bytes
+        decoded_string = decoded_bytes.decode('utf-8') # decode bytes to plain text
+        return decoded_string
+    except binascii.Error as e:
+        print(f'Error: {e}')
+        print('Possible issues:')
+        print(' - Invalid Base64 data')
+        print(' - Binary data instead of text data')
+        exit()
+        
+    except UnicodeDecodeError as e:
+        print(f'Error: {e}')
+        print('Possible issues:')
+        print(' - Invalid UTF-8 data')
+        print(' - Unsupported characters')
+        print(' - Incorrect encoding specified')
+        exit()
 
 def output(results):
     choice = input('Print results or output to text file?(P/F): ').lower()
